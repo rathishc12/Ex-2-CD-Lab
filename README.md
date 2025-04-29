@@ -32,6 +32,28 @@
 7.	Compile that file with C compiler and verify the output.
 
 # INPUT
+```
+if(a<b){
+```
+INPUT IMAGE :
+
+![image](https://github.com/user-attachments/assets/0bd9d958-327c-443c-b454-81561c42a471)
+
 # OUTPUT
+FUNCTION
+```
+	if(
+ a is an IDENTIFIER
+	< is a RELATIONAL OPERATOR
+ b is an IDENTIFIER
+	)
+
+ BLOCK BEGINS
+```
+OUTPUT IMAGE :
+
+![image](https://github.com/user-attachments/assets/d4530b74-6a7f-4904-8a8c-eec540e13a14)
+
+
 # RESULT
 ## The lexical analyzer is implemented using lex and the output is verified.
