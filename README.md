@@ -1,4 +1,5 @@
 # Ex-2-GENERATION OF LEXICAL TOKENS LEX FLEX TOOL
+# DATE: 25/04/25
 # AIM
 ## To write a lex program to implement lexical analyzer to recognize a few patterns.
 # ALGORITHM
@@ -31,125 +32,53 @@
 6.	Compile the lex program with lex compiler to produce output file as lex.yy.c. eg $ lex filename.l $ cc lex.yy.c
 7.	Compile that file with C compiler and verify the output.
 
-
-# PROGRAM 
+# INPUT
 ```
 %{
-/* program to recognize a C program */
-int COMMENT = 0;
+#include <stdio.h>
+#include <string.h>
+
+int isKeyword(const char *str) {
+    const char *keywords[] = {"if", "else", "while", "for", "int"};
+    for (int i = 0; i < 5; ++i) {
+        if (strcmp(str, keywords[i]) == 0)
+            return 1;
+    }
+    return 0;
+}
 %}
 
-identifier [a-zA-Z_][a-zA-Z0-9_]*
+%%
+
+[ \t\n]+              ; // Ignore whitespace
+"+"|"-"|"*"|"/"|"="   { printf("Operator: %s\n", yytext); }
+[0-9]+                { printf("Number: %s\n", yytext); }
+[a-zA-Z_][a-zA-Z0-9_]* {
+                        if (isKeyword(yytext)) {
+                            printf("Keyword: %s\n", yytext);
+                        } else {
+                            printf("Identifier: %s\n", yytext);
+                        }
+                    }
+
+.                     ; // Ignore other characters
 
 %%
 
-#.* { printf("\n%s is a PREPROCESSOR DIRECTIVE", yytext); }
-
-int|float|char|double|while|for|do|if|break|continue|void|switch|case|long|struct|const|typedef|return|else|goto { 
-    printf("\n\t%s is a KEYWORD", yytext); 
-}
-
-"/*" { COMMENT = 1; }
-"*/" { COMMENT = 0; }
-
-{identifier}\( { 
-    if (!COMMENT) 
-        printf("\n\nFUNCTION\n\t%s", yytext); 
-}
-
-\{ { 
-    if (!COMMENT) 
-        printf("\n BLOCK BEGINS"); 
-}
-
-\} { 
-    if (!COMMENT) 
-        printf("\n BLOCK ENDS"); 
-}
-
-{identifier}(\[[0-9]*\])? { 
-    if (!COMMENT) 
-        printf("\n %s is an IDENTIFIER", yytext); 
-}
-
-\".*\" { 
-    if (!COMMENT) 
-        printf("\n\t%s is a STRING", yytext); 
-}
-
-[0-9]+ { 
-    if (!COMMENT) 
-        printf("\n\t%s is a NUMBER", yytext); 
-}
-
-\)(\;)? { 
-    if (!COMMENT) { 
-        printf("\n\t"); 
-        ECHO; 
-        printf("\n"); 
-    }
-}
-
-\( { ECHO; }
-
-= { 
-    if (!COMMENT) 
-        printf("\n\t%s is an ASSIGNMENT OPERATOR", yytext); 
-}
-
-\+|\-|\*|\/ { 
-    if (!COMMENT) 
-        printf("\n\t%s is an ARITHMETIC OPERATOR", yytext); 
-}
-
-\<=|\>=|\<|==|\> { 
-    if (!COMMENT) 
-        printf("\n\t%s is a RELATIONAL OPERATOR", yytext); 
-}
-
-%%
-
-int main(int argc, char **argv) {
-    if (argc > 1) {
-        FILE *file;
-        file = fopen(argv[1], "r"); 
-        if (!file) {
-            printf("could not open %s \n", argv[1]); 
-            exit(0);
-        }
-        yyin = file;
-    }
+int main(void) {
+    printf("Enter your input: ");
     yylex();
-    printf("\n\n");
     return 0;
 }
 
-int yywrap() { 
-    return 1; 
+int yywrap(void) {
+    return 1;
 }
 ```
-# INPUT
-```
-if(a<b){
-```
-INPUT IMAGE :
-
-![image](https://github.com/user-attachments/assets/0bd9d958-327c-443c-b454-81561c42a471)
-
 # OUTPUT
-FUNCTION
-```
-	if(
- a is an IDENTIFIER
-	< is a RELATIONAL OPERATOR
- b is an IDENTIFIER
-	)
 
- BLOCK BEGINS
-```
-OUTPUT IMAGE :
+![Screenshot 2025-05-13 141557](https://github.com/user-attachments/assets/6c9f171a-838e-4bd5-b6af-94c8bb83c1a0)
 
-![image](https://github.com/user-attachments/assets/d4530b74-6a7f-4904-8a8c-eec540e13a14)
 
 
 # RESULT
